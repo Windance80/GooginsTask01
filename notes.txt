@@ -1,3 +1,6 @@
 working on:
-* add tailwind and daisyui
-* remove bootstrap
+* add appbar title 👈
+
+done:
+* add tailwind and daisyui ✅
+* remove bootstrap ✅

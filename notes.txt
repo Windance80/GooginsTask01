@@ -1,0 +1,3 @@
+working on:
+* add tailwind and daisyui
+* remove bootstrap

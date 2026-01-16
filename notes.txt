@@ -1,6 +1,7 @@
 working on:
-* add appbar title 👈
+* add coconut theme
 
 done:
+* add appbar title ✅
 * add tailwind and daisyui ✅
 * remove bootstrap ✅

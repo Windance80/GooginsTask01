@@ -12,11 +12,13 @@
     <link rel="stylesheet" href="GooginsTask01.Web.styles.css" />
     <ImportMap />
     <link rel="icon" type="image/png" href="_content/GooginsTask01.Shared/favicon.png" />
+    <script type="module" src="https://unpkg.com/cally"></script>
     <HeadOutlet @rendermode="InteractiveWebAssembly" />
 </head>
 
 <body>
     <Routes @rendermode="InteractiveWebAssembly" />
+    <script src="@Assets["_content/GooginsTask01.Shared/js/datepicker.js"]""></script>
     <script src="@Assets["_framework/blazor.web.js"]"></script>
 </body>
 

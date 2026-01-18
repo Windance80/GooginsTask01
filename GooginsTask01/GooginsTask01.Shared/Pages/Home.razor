@@ -1,8 +1,51 @@
 ﻿@page "/"
 @using GooginsTask01.Shared.Services
 @inject IFormFactor FormFactor
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Home</PageTitle>
+
+
+@* CALENDAR *@
+@* <div class="@headerHeightClass  w-1/2 sm:w-1/4"> *@
+<div class="pt-5 ps-2 pe-2 w-1/2 sm:w-1/4">
+    <!-- Keep original structure almost 100% the same -->
+    <button popovertarget="cally-popover1" 
+            class="input input-border cursor-pointer" 
+            id="cally1" 
+            style="anchor-name:--cally1">
+        
+        <div class="flex justify-between w-full">
+            <div id="cally1-date-text">
+                Pick a date
+            </div>
+
+            <div class="p-1 bg-blue-600 flex items-center justify-center rounded-md">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4 text-white">
+                    <path d="M5.75 7.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM5 10.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0ZM10.25 7.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM7.25 8.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0ZM8 9.5A.75.75 0 1 0 8 11a.75.75 0 0 0 0-1.5Z" />
+                    <path fill-rule="evenodd" d="M4.75 1a.75.75 0 0 0-.75.75V3a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2V1.75a.75.75 0 0 0-1.5 0V3h-5V1.75A.75.75 0 0 0 4.75 1ZM3.5 7a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v4.5a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7Z" clip-rule="evenodd" />
+                </svg>
+            </div>
+        </div>
+    </button>
+
+    <div popover 
+         id="cally-popover1" 
+         class="dropdown bg-base-100 rounded-box shadow-lg" 
+         style="position-anchor:--cally1">
+        <calendar-date class="cally" @ref="@calendarRef">
+            <svg aria-label="Previous" class="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M15.75 19.5 8.25 12l7.5-7.5"></path>
+            </svg>
+            <svg aria-label="Next" class="fill-current size-4" slot="next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
+            </svg>
+            <calendar-month></calendar-month>
+        </calendar-date>
+    </div>
+</div>
+
+<div class="divider"></div>
 
 @* <h1>Hello, world!</h1>
 
@@ -13,4 +56,15 @@
 @code {
     private string factor => FormFactor.GetFormFactor();
     private string platform => FormFactor.GetPlatform();
+    string headerHeightClass = "pt-[70px]";
+    string footerHeightClass = "pb-[60px]"; 
+    private ElementReference calendarRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("addCallyChangeListener", calendarRef);
+        }
+    }
 }

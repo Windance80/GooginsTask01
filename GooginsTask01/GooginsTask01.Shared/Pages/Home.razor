@@ -69,19 +69,41 @@ else
             @foreach (var todoItem in CurrentTodo.TodoItems)
             {
                 @* time *@
-                <li class="list-row">
-                    <div class="sm:text-2xl text-accent">
+                <li class="list-row items-center" @key="todoItem.Id">
+                    <div class="text-xl sm:text-2xl text-accent">
                         @todoItem.Time.ToString("HH:mm")
                     </div>
+
+                    @* text for the list *@
                     <div>
                     </div>
-                    <button class="btn btn-square btn-ghost btn-accent">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-10">
+
+                    @* add time button *@                    
+                    <button class="btn btn-square btn-ghost btn-accent"
+                        onclick="document.getElementById('dialog-add-item-modal-@todoItem.Id').showModal()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-8 sm:size-10">
                             <path fill-rule="evenodd"
                                 d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
                                 clip-rule="evenodd" />
                         </svg>
                     </button>
+
+                    @* dialog *@
+                    <dialog id="dialog-add-item-modal-@todoItem.Id" class="modal">
+                        <div class="modal-box">
+                            <h3 class="text-lg font-bold">
+                                @todoItem.Time.ToString("HH:mm")
+                            </h3>
+                            <p class="py-4">Press ESC key or click the button below to close</p>
+                            <div class="modal-action">
+                                <form method="dialog">
+                                    <!-- if there is a button in form, it will close the modal -->
+                                    <button class="btn">Cancel</button>
+                                    <button class="btn" @onclick="(_) => OnItemAdded(todoItem)">Ok</button>
+                                </form>
+                            </div>
+                        </div>
+                    </dialog>
                 </li>
 
                 @* var index = 1; *@
@@ -157,6 +179,9 @@ else
             await JSRuntime.InvokeVoidAsync("addCallyChangeListener", calendarRef, dotNetHelper);
 
             CurrentTodo = await TodoRepository.GetTodoByDateAsync(SelectedDate);
+            if (CurrentTodo != null)
+                CurrentTodo.TodoItems = CurrentTodo.TodoItems.OrderBy(todoItem => todoItem.Time).ToList();
+
             isCurrentTodoLoading = false;
             StateHasChanged();
         }
@@ -175,8 +200,35 @@ else
             CurrentTodo = await TodoRepository.GetTodoByDateAsync(SelectedDate);
         }
 
+        if (CurrentTodo != null)
+            CurrentTodo.TodoItems = CurrentTodo.TodoItems.OrderBy(todoItem => todoItem.Time).ToList();
+
         isCurrentTodoLoading = false;
         StateHasChanged();
     }
 
+    public async Task OnItemAdded(TodoItem todoItem)
+    {
+        Console.WriteLine($"TodoItem time: {todoItem.Time}");
+        if (CurrentTodo == null) return;
+        for (int i = 0; i < CurrentTodo.TodoItems.Count; i++)
+        {
+            if (CurrentTodo.TodoItems[i].Id == todoItem.Id)
+            {
+                CurrentTodo.TodoItems[i].Items.Add(
+                new Item
+                {
+                    Id = 0,
+                    IsCompleted = false,
+                    Text = "",
+                    TodoItem = CurrentTodo.TodoItems[i],
+                    TodoItemId = CurrentTodo.TodoItems[i].Id,
+                }
+                );
+                i = CurrentTodo.TodoItems.Count;
+            }
+        }
+        await TodoRepository.UpdateTodoAsync(CurrentTodo);
+        StateHasChanged();
+    }
 }

@@ -1,5 +1,6 @@
 working on:
-* 
+* add Time Button 
+* add Item Button 👈
 
 done:
 * loading data from pick date ✅

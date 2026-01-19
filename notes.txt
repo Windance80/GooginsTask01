@@ -1,6 +1,7 @@
 working on:
 * add body layout
     * add date ✅
+* add Repository Pattern 👈
 
 done:
 * add winamp theme ✅

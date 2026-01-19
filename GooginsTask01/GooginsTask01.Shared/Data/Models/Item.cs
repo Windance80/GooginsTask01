@@ -1,7 +1,7 @@
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 
-namespace TodoList.Shared.Models;
+namespace GooginsTask01.Shared.Data.Models;
 
 public class Item
 {

@@ -7,4 +7,6 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 // Add device-specific services used by the GooginsTask01.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
+builder.Services.AddSingleton<ITodoRepository, MockRepository>();
+
 await builder.Build().RunAsync();

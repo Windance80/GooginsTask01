@@ -6,15 +6,13 @@ window.addCallyChangeListener = (calendarElement, dotNetHelper) => {
         if (button) {            
             const text = document.getElementById('cally1-date-text')
             text.innerText = e.target.value || 'Pick a date';
-            
-            if (dotNetHelper) {
-                // console.log("dotnethelper is running")
-                await dotNetHelper.invokeMethodAsync('HandleDateSelected', e.target.value)
-                // console.log("dotnethelper is finished")
-            }
-            
+
             const popover = document.getElementById('cally-popover1');
             popover.hidePopover();
+            
+            if (dotNetHelper) {
+                await dotNetHelper.invokeMethodAsync('HandleDateSelected', e.target.value)
+            }            
         }
 
         // Optional: dispatch custom event or store value in dotNet object

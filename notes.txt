@@ -1,7 +1,8 @@
 working on:
-* loading data from pick date 👈
+* 
 
 done:
+* loading data from pick date ✅
 * add body layout ✅
     * add date ✅
 * add Repository Pattern ✅

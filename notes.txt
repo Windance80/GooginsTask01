@@ -1,9 +1,10 @@
 working on:
-* add body layout
-    * add date ✅
-* add Repository Pattern 👈
+* loading data from pick date 👈
 
 done:
+* add body layout ✅
+    * add date ✅
+* add Repository Pattern ✅
 * add winamp theme ✅
 * add appbar title ✅
 * add tailwind and daisyui ✅

@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <div>
+    <div class="@footerHeightClass">
         @Body
     </div>
 
@@ -86,3 +86,7 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    string footerHeightClass = "pb-[80px]";
+}

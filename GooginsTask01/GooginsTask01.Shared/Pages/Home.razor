@@ -64,20 +64,33 @@ else
     {
         <ul class="list bg-base-100 rounded-box shadow-md">
 
-            <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Tasks</li>
+            <li class="p-4 pb-2 text-xs opacity-60 tracking-wide sm:text-base">Tasks</li>
 
             @foreach (var todoItem in CurrentTodo.TodoItems)
             {
-                <li class="md:text-2xl list-row">
-                    @todoItem.Time.ToString("HH:mm")
+                @* time *@
+                <li class="list-row">
+                    <div class="sm:text-2xl text-accent">
+                        @todoItem.Time.ToString("HH:mm")
+                    </div>
+                    <div>
+                    </div>
+                    <button class="btn btn-square btn-ghost btn-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-10">
+                            <path fill-rule="evenodd"
+                                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
                 </li>
 
                 @* var index = 1; *@
                 @foreach (var item in todoItem.Items)
                 {
+                    @* item *@
                     <li class="list-row items-center">
-                        <div class="md:text-xl font-thin opacity-30 tabular-nums">@("-")</div>
-                        <div class="md:text-xl">
+                        <div class="sm:text-xl font-thin opacity-30 tabular-nums">@("-")</div>
+                        <div class="sm:text-xl">
                             @item.Text
                         </div>
 
@@ -108,7 +121,6 @@ else
                     </li>
                     @* index++; *@
                 }
-
             }
         </ul>
     }
@@ -132,7 +144,7 @@ else
     private DotNetObjectReference<Home>? dotNetHelper;
     private Todo? CurrentTodo { get; set; }
     private DateTime SelectedDate { get; set; } = DateTime.Today;
-    bool isCurrentTodoLoading = true;    
+    bool isCurrentTodoLoading = true;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

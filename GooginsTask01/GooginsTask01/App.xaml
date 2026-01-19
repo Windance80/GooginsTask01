@@ -11,7 +11,10 @@
                 please refer to the documentation:
                 https://go.microsoft.com/fwlink/?linkid=2282329
             -->
-
+            <Color x:Key="PageBackgroundLight">White</Color>
+            <!-- Or your light background -->
+            <Color x:Key="PageBackgroundDark">Black</Color>
+            <!-- Or your dark background -->
         </ResourceDictionary>
     </Application.Resources>
 </Application>

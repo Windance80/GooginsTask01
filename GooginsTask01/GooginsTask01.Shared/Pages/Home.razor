@@ -70,7 +70,7 @@ else
             @foreach (var todoItem in CurrentTodo.TodoItems)
             {
                 @* time *@
-                <li class="list-row items-center" @key="todoItem.Id">
+                <li class="list-row items-center" @key="@($"todoItem{todoItem.Id}")">
                     <div class="text-xl sm:text-2xl text-accent">
                         @todoItem.Time.ToString("HH:mm")
                     </div>
@@ -95,7 +95,9 @@ else
                             <h3 class="text-lg font-bold">
                                 @todoItem.Time.ToString("HH:mm")
                             </h3>
-                            <p class="py-4">Press ESC key or click the button below to close</p>
+                            <textarea class="textarea" placeholder="Input text" @bind="newItemText" @bind:event="oninput">
+
+                            </textarea>
                             <div class="modal-action">
                                 <form method="dialog">
                                     <!-- if there is a button in form, it will close the modal -->
@@ -111,7 +113,7 @@ else
                 @foreach (var item in todoItem.Items)
                 {
                     @* item *@
-                    <li class="list-row items-center">
+                    <li class="list-row items-center" @key="@($"todoitem{todoItem.Id}item{item.Id}")">
                         <div class="sm:text-xl font-thin opacity-30 tabular-nums">@("-")</div>
                         <div class="sm:text-xl">
                             @item.Text
@@ -168,6 +170,7 @@ else
     private Todo? CurrentTodo { get; set; }
     private DateTime SelectedDate { get; set; } = DateTime.Today;
     bool isCurrentTodoLoading = true;
+    private string newItemText { get; set; } = string.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -210,8 +213,12 @@ else
 
     public async Task OnItemAdded(TodoItem todoItem)
     {
-        Console.WriteLine($"TodoItem time: {todoItem.Time}");
-        if (CurrentTodo == null) return;
+        Console.WriteLine($"TodoItem time: {todoItem.Time} newItemText: {newItemText}");
+        if (CurrentTodo == null)
+        {
+            return;
+        }
+
         for (int i = 0; i < CurrentTodo.TodoItems.Count; i++)
         {
             if (CurrentTodo.TodoItems[i].Id == todoItem.Id)
@@ -221,7 +228,7 @@ else
                 {
                     Id = 0,
                     IsCompleted = false,
-                    Text = "",
+                    Text = newItemText,
                     TodoItem = CurrentTodo.TodoItems[i],
                     TodoItemId = CurrentTodo.TodoItems[i].Id,
                 }
@@ -229,6 +236,8 @@ else
                 i = CurrentTodo.TodoItems.Count;
             }
         }
+
+        newItemText = "";
         await TodoRepository.UpdateTodoAsync(CurrentTodo);
         StateHasChanged();
     }

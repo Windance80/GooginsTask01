@@ -56,8 +56,17 @@ public class MockRepository : ITodoRepository
         if (removingTodo != null)
         {
             _todos.Remove(removingTodo);
-            _todos.Add(todo);
+            for (int i = 0; i < todo.TodoItems.Count; i++)
+            {
+                for (int j = 0; j < todo.TodoItems[i].Items.Count; j++)
+                {
+                    todo.TodoItems[i].Items[j].Id = j + 1;
+                }
+
+            }
         }
+        _todos.Add(todo);
+
         return Task.CompletedTask;
     }
 

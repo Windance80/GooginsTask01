@@ -2232,6 +2232,12 @@
   .text-wrap {
     text-wrap: wrap;
   }
+  .checkbox-accent {
+    @layer daisyui.l1.l2 {
+      color: var(--color-accent-content);
+      --input-color: var(--color-accent);
+    }
+  }
   .text-accent {
     color: var(--color-accent);
   }

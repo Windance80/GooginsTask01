@@ -1,6 +1,6 @@
 window.addCallyChangeListener = (calendarElement, dotNetHelper) => {
     calendarElement.addEventListener('change', async (e) => {
-        console.log("javascript is running")
+        // console.log("javascript is running")
         
         const button = document.getElementById('cally1');
         if (button) {            

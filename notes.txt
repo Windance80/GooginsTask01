@@ -1,8 +1,10 @@
 working on:
 * add Time Button 
-* add Item Button 👈
+* implement chckbox 👈
+* implement delete item function 
 
 done:
+* add Item Button ✅
 * loading data from pick date ✅
 * add body layout ✅
     * add date ✅

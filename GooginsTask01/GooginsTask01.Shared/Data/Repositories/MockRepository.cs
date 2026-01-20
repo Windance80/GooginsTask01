@@ -51,7 +51,7 @@ public class MockRepository : ITodoRepository
     }
 
     public Task UpdateTodoAsync(Todo todo)
-    {
+    {        
         var removingTodo = _todos.Find(td => td.Id == todo.Id);
         if (removingTodo != null)
         {
@@ -61,6 +61,7 @@ public class MockRepository : ITodoRepository
                 for (int j = 0; j < todo.TodoItems[i].Items.Count; j++)
                 {
                     todo.TodoItems[i].Items[j].Id = j + 1;
+                    // Console.WriteLine($"UpdateTodoAsync: {todo.TodoItems[i].Items[j].Id} = {j + 1}");
                 }
 
             }

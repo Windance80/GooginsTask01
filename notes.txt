@@ -1,7 +1,8 @@
 working on:
 * add Time Button 
-* implement chckbox 👈
-* implement delete item function 
+* add dialog for delete item 👈
+* implement chckbox ✅
+* implement delete item function ✅
 
 done:
 * add Item Button ✅

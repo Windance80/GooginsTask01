@@ -79,7 +79,7 @@ else
                     <div>
                     </div>
 
-                    @* add time button *@                    
+                    @* add item button *@                    
                     <button class="btn btn-square btn-ghost btn-accent"
                         onclick="document.getElementById('dialog-add-item-modal-@todoItem.Id').showModal()">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-8 sm:size-10">
@@ -95,9 +95,8 @@ else
                             <h3 class="text-lg font-bold">
                                 @todoItem.Time.ToString("HH:mm")
                             </h3>
-                            <textarea class="textarea" placeholder="Input text" @bind="newItemText" @bind:event="oninput">
-
-                                        </textarea>
+                            <textarea class="textarea" placeholder="Input text" @bind="newItemText"
+                                @bind:event="oninput"></textarea>
                             <div class="modal-action">
                                 <form method="dialog">
                                     <!-- if there is a button in form, it will close the modal -->
@@ -109,21 +108,24 @@ else
                     </dialog>
                 </li>
 
-                @* var index = 1; *@
                 @foreach (var item in todoItem.Items)
                 {
                     @* item *@
                     <li class="list-row items-center" @key="@($"todoitem{todoItem.Id}item{item.Id}")">
                         <div class="sm:text-xl font-thin opacity-30 tabular-nums">@("-")</div>
+
                         <div class="sm:text-xl">
                             @item.Text
+                            @item.TodoItemId
+                            @item.Id                            
                         </div>
 
                         @* checkbox *@
-                        <input type="checkbox" class="checkbox checkbox-accent" @bind="@item.IsCompleted" @bind:after="() => OnCheckboxChanged(item)"/>
+                        <input type="checkbox" class="checkbox checkbox-accent" @bind="@item.IsCompleted"
+                            @bind:after="() => OnCheckboxChanged(item)" />
 
                         @* trash icon *@
-                        <button class="btn btn-square btn-ghost">
+                        <button class="btn btn-square btn-ghost" @onclick="(_) => OnItemDeleted(item)">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                                 <path fill-rule="evenodd"
                                     d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
@@ -131,7 +133,6 @@ else
                             </svg>
                         </button>
                     </li>
-                    @* index++; *@
                 }
             }
         </ul>
@@ -210,10 +211,11 @@ else
         {
             if (CurrentTodo.TodoItems[i].Id == todoItem.Id)
             {
+                var itemId = CurrentTodo.TodoItems[i].Items.Count;
                 CurrentTodo.TodoItems[i].Items.Add(
                 new Item
                 {
-                    Id = 0,
+                    Id = itemId + 1,
                     IsCompleted = false,
                     Text = newItemText,
                     TodoItem = CurrentTodo.TodoItems[i],
@@ -235,8 +237,23 @@ else
 
         if (CurrentTodo == null)
             return;
-            
+
         await TodoRepository.UpdateTodoAsync(CurrentTodo);
+        @* StateHasChanged(); *@
+    }
+
+    private async Task OnItemDeleted(Item item)
+    {
+        Console.WriteLine($"OnCheckboxChanged: {item.IsCompleted}");
+
+        if (CurrentTodo == null)
+            return;
+
+        await TodoRepository.DeleteItemAsync(item);
+
+        CurrentTodo = await TodoRepository.GetTodoByDateAsync(SelectedDate);
+        if (CurrentTodo != null)
+            CurrentTodo.TodoItems = CurrentTodo.TodoItems.OrderBy(todoItem => todoItem.Time).ToList();
         @* StateHasChanged(); *@
     }
 

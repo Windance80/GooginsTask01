@@ -19,6 +19,45 @@ public class MockRepository : ITodoRepository
         return Task.FromResult(todo);
     }
 
+    public Task DeleteItemAsync(Item item)
+    {
+        for (int i = 0; i < _todos.Count; i++)
+        {
+            for (int j = 0; j < _todos[i].TodoItems.Count; j++)
+            {
+                if (_todos[i].TodoItems[j].Id == item.TodoItemId)
+                {
+                    for (int k = 0; k < _todos[i].TodoItems[j].Items.Count; k++)
+                    {
+                        if (_todos[i].TodoItems[j].Items[k].Id == item.Id)
+                        {
+                            _todos[i].TodoItems[j].Items.RemoveAt(k);
+                            Console.WriteLine($"Item: {item.Text} deleted");
+                            return Task.CompletedTask;
+                        }
+                    }
+                }
+
+                // var itemTobeDelete = _todos[i].TodoItems[j].Items.Find(i => i.Id == item.Id);
+
+                // if (itemTobeDelete != null)
+                // {
+                //     var isDeleted = _todos[i].TodoItems[j].Items.Remove(itemTobeDelete);
+
+                //     if (isDeleted)
+                //     {
+                //         Console.WriteLine($"Item: {item.Text} deleted");
+                //     }
+                //     else
+                //     {
+                //         Console.WriteLine($"Item: {item.Text} not found");
+                //     }
+                // }
+            }
+        }
+        return Task.CompletedTask;
+    }
+
     public Task DeleteTodoAsync(int id)
     {
         var isRemoved = false;
@@ -51,22 +90,20 @@ public class MockRepository : ITodoRepository
     }
 
     public Task UpdateTodoAsync(Todo todo)
-    {        
-        var removingTodo = _todos.Find(td => td.Id == todo.Id);
-        if (removingTodo != null)
+    {
+        // remove and add todo
+        var removeTodo = _todos.Find(td => td.Id == todo.Id);
+        if (removeTodo != null)
         {
-            _todos.Remove(removingTodo);
-            for (int i = 0; i < todo.TodoItems.Count; i++)
-            {
-                for (int j = 0; j < todo.TodoItems[i].Items.Count; j++)
-                {
-                    todo.TodoItems[i].Items[j].Id = j + 1;
-                    // Console.WriteLine($"UpdateTodoAsync: {todo.TodoItems[i].Items[j].Id} = {j + 1}");
-                }
-
-            }
+            _todos.Remove(removeTodo);
+            Console.WriteLine($"UpdateTodoAsync: {todo.Id} removed");
+            _todos.Add(todo);
+            Console.WriteLine($"UpdateTodoAsync: {todo.Id} add");
         }
-        _todos.Add(todo);
+        else
+        {
+            Console.WriteLine($"UpdateTodoAsync: {todo.Id} not found");
+        }
 
         return Task.CompletedTask;
     }
@@ -93,10 +130,11 @@ public class MockRepository : ITodoRepository
             Time = today.AddHours(9),
             Items =
             {
-                new Item { Id = 1, Text = "Morning standup", IsCompleted = true },
-                new Item { Id = 2, Text = "Review pull requests", IsCompleted = false },
-                new Item { Id = 3, Text = "Fix login bug", IsCompleted = false }
-            }
+                new Item { Id = 1, Text = "Morning standup", IsCompleted = true, TodoItemId = 1 },
+                new Item { Id = 2, Text = "Review pull requests", IsCompleted = false, TodoItemId = 1 },
+                new Item { Id = 3, Text = "Fix login bug", IsCompleted = false, TodoItemId = 1 }
+            },
+            TodoId = 1,
         },
         new TodoItem
         {
@@ -104,16 +142,47 @@ public class MockRepository : ITodoRepository
             Time = today.AddHours(14),
             Items =
             {
-                new Item { Id = 4, Text = "Team retrospective", IsCompleted = false }
-            }
+                new Item { Id = 4, Text = "Team retrospective", IsCompleted = false, TodoItemId = 2 }
+            },
+            TodoId = 1
         },
 
         // +5 new TodoItems for today
-        new TodoItem { Id = 5, Time = today.AddHours(8), Items = { new Item { Id = 11, Text = "Check emails & Slack", IsCompleted = true } } },
-        new TodoItem { Id = 6, Time = today.AddHours(11), Items = { new Item { Id = 12, Text = "Code review - feature branch", IsCompleted = false } } },
-        new TodoItem { Id = 7, Time = today.AddHours(13), Items = { new Item { Id = 13, Text = "Lunch + short walk", IsCompleted = true } } },
-        new TodoItem { Id = 8, Time = today.AddHours(16), Items = { new Item { Id = 14, Text = "Update project roadmap", IsCompleted = false } } },
-        new TodoItem { Id = 9, Time = today.AddHours(18), Items = { new Item { Id = 15, Text = "Daily wrap-up & tomorrow planning", IsCompleted = false } } }
+        new TodoItem
+        {
+            Id = 5,
+            Time = today.AddHours(8),
+            Items =
+            {
+                new Item
+                {
+                    Id = 11,
+                    Text = "Check emails & Slack",
+                    IsCompleted = true,
+                    TodoItemId = 5
+                }
+            },
+            TodoId = 1
+         },
+        new TodoItem
+        {
+            Id = 6,
+            Time = today.AddHours(11),
+            Items =
+            {
+                new Item
+                {
+                    Id = 12,
+                    Text = "Code review - feature branch",
+                    IsCompleted = false,
+                    TodoItemId = 6,
+                }
+            },
+            TodoId = 1
+        },
+        new TodoItem { Id = 7, Time = today.AddHours(13), Items = { new Item { Id = 13, Text = "Lunch + short walk", IsCompleted = true, TodoItemId = 7, } }, TodoId = 1 },
+        new TodoItem { Id = 8, Time = today.AddHours(16), Items = { new Item { Id = 14, Text = "Update project roadmap", IsCompleted = false, TodoItemId = 8, } }, TodoId = 1 },
+        new TodoItem { Id = 9, Time = today.AddHours(18), Items = { new Item { Id = 15, Text = "Daily wrap-up & tomorrow planning", IsCompleted = false, TodoItemId = 9, } }, TodoId = 1 }
     });
 
         // Yesterday
@@ -132,18 +201,19 @@ public class MockRepository : ITodoRepository
             Time = yesterday.AddHours(10),
             Items =
             {
-                new Item { Id = 5, Text = "Grocery shopping", IsCompleted = true },
-                new Item { Id = 6, Text = "Call mom", IsCompleted = true },
-                new Item { Id = 7, Text = "Water the plants", IsCompleted = true }
-            }
+                new Item { Id = 5, Text = "Grocery shopping", IsCompleted = true, TodoItemId = 3 },
+                new Item { Id = 6, Text = "Call mom", IsCompleted = true, TodoItemId = 3 },
+                new Item { Id = 7, Text = "Water the plants", IsCompleted = true, TodoItemId = 3 }
+            },
+            TodoId = 2
         },
 
         // +5 new TodoItems for yesterday
-        new TodoItem { Id = 10, Time = yesterday.AddHours(7), Items = { new Item { Id = 16, Text = "Morning workout", IsCompleted = true } } },
-        new TodoItem { Id = 11, Time = yesterday.AddHours(12), Items = { new Item { Id = 17, Text = "Dentist appointment", IsCompleted = true } } },
-        new TodoItem { Id = 12, Time = yesterday.AddHours(15), Items = { new Item { Id = 18, Text = "Finish quarterly report", IsCompleted = true } } },
-        new TodoItem { Id = 13, Time = yesterday.AddHours(17), Items = { new Item { Id = 19, Text = "Buy birthday gift", IsCompleted = false } } },
-        new TodoItem { Id = 14, Time = yesterday.AddHours(20), Items = { new Item { Id = 20, Text = "Watch new episode", IsCompleted = true } } }
+        new TodoItem { Id = 10, Time = yesterday.AddHours(7), Items = { new Item { Id = 16, Text = "Morning workout", IsCompleted = true, TodoItemId = 10 } }, TodoId = 2 },
+        new TodoItem { Id = 11, Time = yesterday.AddHours(12), Items = { new Item { Id = 17, Text = "Dentist appointment", IsCompleted = true, TodoItemId = 11 } }, TodoId = 2 },
+        new TodoItem { Id = 12, Time = yesterday.AddHours(15), Items = { new Item { Id = 18, Text = "Finish quarterly report", IsCompleted = true, TodoItemId = 12 } }, TodoId = 2 },
+        new TodoItem { Id = 13, Time = yesterday.AddHours(17), Items = { new Item { Id = 19, Text = "Buy birthday gift", IsCompleted = false, TodoItemId = 13 } }, TodoId = 2 },
+        new TodoItem { Id = 14, Time = yesterday.AddHours(20), Items = { new Item { Id = 20, Text = "Watch new episode", IsCompleted = true, TodoItemId = 14 } }, TodoId = 2 }
     });
 
         // Two days ago
@@ -163,18 +233,19 @@ public class MockRepository : ITodoRepository
             Time = twoDaysAgo.AddHours(15),
             Items =
             {
-                new Item { Id = 8, Text = "Finish project proposal", IsCompleted = true },
-                new Item { Id = 9, Text = "Email client update", IsCompleted = true },
-                new Item { Id = 10, Text = "Prepare demo", IsCompleted = false }
-            }
+                new Item { Id = 8, Text = "Finish project proposal", IsCompleted = true, TodoItemId = 4 },
+                new Item { Id = 9, Text = "Email client update", IsCompleted = true, TodoItemId = 4 },
+                new Item { Id = 10, Text = "Prepare demo", IsCompleted = false, TodoItemId = 4 }
+            },
+            TodoId = 3
         },
 
         // +5 new TodoItems for two days ago
-        new TodoItem { Id = 15, Time = twoDaysAgo.AddHours(9), Items = { new Item { Id = 21, Text = "Weekly team sync", IsCompleted = true } } },
-        new TodoItem { Id = 16, Time = twoDaysAgo.AddHours(11), Items = { new Item { Id = 22, Text = "Update documentation", IsCompleted = true } } },
-        new TodoItem { Id = 17, Time = twoDaysAgo.AddHours(13), Items = { new Item { Id = 23, Text = "Fix CI pipeline", IsCompleted = true } } },
-        new TodoItem { Id = 18, Time = twoDaysAgo.AddHours(16), Items = { new Item { Id = 24, Text = "Research new tech stack", IsCompleted = false } } },
-        new TodoItem { Id = 19, Time = twoDaysAgo.AddHours(19), Items = { new Item { Id = 25, Text = "Backup important files", IsCompleted = true } } }
+        new TodoItem { Id = 15, Time = twoDaysAgo.AddHours(9), Items = { new Item { Id = 21, Text = "Weekly team sync", IsCompleted = true, TodoItemId = 15 } }, TodoId = 3 },
+        new TodoItem { Id = 16, Time = twoDaysAgo.AddHours(11), Items = { new Item { Id = 22, Text = "Update documentation", IsCompleted = true, TodoItemId = 16 } }, TodoId = 3 },
+        new TodoItem { Id = 17, Time = twoDaysAgo.AddHours(13), Items = { new Item { Id = 23, Text = "Fix CI pipeline", IsCompleted = true, TodoItemId = 17 } }, TodoId = 3 },
+        new TodoItem { Id = 18, Time = twoDaysAgo.AddHours(16), Items = { new Item { Id = 24, Text = "Research new tech stack", IsCompleted = false, TodoItemId = 18 } }, TodoId = 3 },
+        new TodoItem { Id = 19, Time = twoDaysAgo.AddHours(19), Items = { new Item { Id = 25, Text = "Backup important files", IsCompleted = true, TodoItemId = 19 } }, TodoId = 3 }
     });
 
         _todos.AddRange(new[] { todoToday, todoYesterday, todoOld });

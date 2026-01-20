@@ -10,4 +10,5 @@ public interface ITodoRepository
     Task<Todo> CreateTodoAsync(Todo todo);
     Task UpdateTodoAsync(Todo todo);
     Task DeleteTodoAsync(int id);       
+    Task DeleteItemAsync(Item item);
 }

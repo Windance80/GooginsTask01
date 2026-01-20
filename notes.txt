@@ -1,6 +1,8 @@
 working on:
+* use chart.js to show in a week or month  the progress %
 * add Time Button 
 * add dialog for delete item 👈
+* use hammer.js to swipe left delete, use hidden trash icon, that slowly appear when swiping left
 * implement chckbox ✅
 * implement delete item function ✅
 

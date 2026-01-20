@@ -5,6 +5,7 @@
 @inject IFormFactor FormFactor
 @inject IJSRuntime JSRuntime
 @inject ITodoRepository TodoRepository
+@implements IAsyncDisposable
 
 <PageTitle>Home</PageTitle>
 
@@ -230,5 +231,10 @@ else
         }
         await TodoRepository.UpdateTodoAsync(CurrentTodo);
         StateHasChanged();
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        dotNetHelper?.Dispose();
     }
 }

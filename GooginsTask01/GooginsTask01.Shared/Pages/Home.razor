@@ -89,7 +89,7 @@ else
                     </button>
 
                     @* dialog *@
-                    <dialog id="dialog-add-item-modal-@todoItem.Id" class="modal">
+                    <dialog id="dialog-add-item-modal-@todoItem.Id" class="modal modal-top">
                         <div class="modal-box">
                             <h3 class="text-lg font-bold">
                                 @todoItem.Time.ToString("HH:mm")
@@ -135,7 +135,7 @@ else
                                     clip-rule="evenodd" />
                             </svg>
                         </button>
-                        <dialog id="dialog-delete-item-modal-@todoItem.Id-@item.Id" class="modal">
+                        <dialog id="dialog-delete-item-modal-@todoItem.Id-@item.Id" class="modal modal-top">
                             <div class="modal-box">
                                 <h3 class="text-lg font-bold">
                                     Delete

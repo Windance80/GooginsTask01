@@ -2055,6 +2055,23 @@
   .table {
     display: table;
   }
+  .modal-top {
+    @layer daisyui.l1.l2 {
+      place-items: start;
+      .modal-box {
+        height: auto;
+        width: 100%;
+        max-width: none;
+        max-height: calc(100vh - 5em);
+        translate: 0 -100%;
+        scale: 1;
+        --modal-tl: 0;
+        --modal-tr: 0;
+        --modal-bl: var(--radius-box);
+        --modal-br: var(--radius-box);
+      }
+    }
+  }
   .btn-circle {
     @layer daisyui.l1.l2 {
       border-radius: calc(infinity * 1px);

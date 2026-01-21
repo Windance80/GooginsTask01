@@ -1,5 +1,3 @@
-// changed to home.js
-
 window.addCallyChangeListener = (calendarElement, dotNetHelper) => {
     calendarElement.addEventListener('change', async (e) => {
         // console.log("javascript is running")

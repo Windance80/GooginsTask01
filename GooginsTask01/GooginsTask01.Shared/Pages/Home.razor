@@ -21,10 +21,9 @@
                 @(SelectedDate.ToString("dd MMM yyyy") ?? "Pick a date")
             </div>
 
-            <div class="p-1 bg-blue-600 flex items-center justify-center rounded-md">
+            <div class="p-1 bg-info flex items-center justify-center rounded-md text-info-content">
                 @* date icon *@
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                    class="size-4 text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                     <path
                         d="M5.75 7.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM5 10.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0ZM10.25 7.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM7.25 8.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0ZM8 9.5A.75.75 0 1 0 8 11a.75.75 0 0 0 0-1.5Z" />
                     <path fill-rule="evenodd"
@@ -71,7 +70,7 @@ else
             {
                 @* time *@
                 <li class="list-row items-center" @key="@($"todoItem{todoItem.Id}")">
-                    <div class="text-xl sm:text-2xl text-accent">
+                    <div class="text-xl sm:text-2xl text-info">
                         @todoItem.Time.ToString("HH:mm")
                     </div>
 
@@ -80,7 +79,7 @@ else
                     </div>
 
                     @* add item button *@                    
-                    <button class="btn btn-square btn-ghost btn-accent"
+                    <button class="btn btn-square btn-ghost btn-info"
                         onclick="document.getElementById('dialog-add-item-modal-@todoItem.Id').showModal()">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-8 sm:size-10">
                             <path fill-rule="evenodd"
@@ -96,10 +95,7 @@ else
                                 @todoItem.Time.ToString("HH:mm")
                             </h3>
                             <div class="flex justify-center pt-4">
-                                <textarea class="textarea grow" 
-                                    placeholder="Input text" 
-                                    @bind="newItemText"
-                                    @bind:event="oninput">
+                                <textarea class="textarea grow" placeholder="Input text" @bind="newItemText" @bind:event="oninput">
                                 </textarea>
                             </div>
                             <div class="modal-action">
@@ -126,7 +122,7 @@ else
                         </div>
 
                         @* checkbox *@
-                        <input type="checkbox" class="checkbox checkbox-accent" @bind="@item.IsCompleted"
+                        <input type="checkbox" class="checkbox checkbox-info" @bind="@item.IsCompleted"
                             @bind:after="() => OnCheckboxChanged(item)" />
 
                         @* trash icon *@
@@ -168,6 +164,83 @@ else
         </div>
     }
 }
+
+@* fab (floating action button) *@
+<div class="fab @footerHeightClass ">
+    <div>
+        <button class="btn btn-warning">
+            <div class=" text-xs ">
+                Add Time
+            </div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+        </button>
+    </div>
+
+</div>
+<div class="fab @footerHeightClass hidden">
+    <!-- a focusable div with tabindex is necessary to work on all browsers. role="button" is necessary for accessibility -->
+    <div tabindex="0" role="button" class="btn btn-lg btn-circle btn-warning">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+            class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 18.75 7.5-7.5 7.5 7.5" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 7.5-7.5 7.5 7.5" />
+        </svg>
+
+    </div>
+
+    <!-- close button should not be focusable so it can close the FAB when clicked. It's just a visual placeholder -->
+    <div class="fab-close @footerHeightClass">
+        Close <span class="btn btn-circle btn-lg btn-error">✕</span>
+    </div>
+
+    <!-- buttons that show up when FAB is open -->
+    <div>
+        <div class="text-warning text-xl font-bold bg-base-300 p-1">
+            Add Time
+        </div>
+        <button class="btn btn-lg btn-circle btn-warning">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+
+
+        </button>
+    </div>
+    <div>
+        <div class="text-warning text-xl font-bold bg-base-300 p-1">
+            Previous Todo
+        </div>
+        <button class="btn btn-lg btn-circle btn-warning">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+            </svg>
+
+        </button>
+    </div>
+    <div>
+        <div class="text-warning text-xl font-bold bg-base-300 p-1">
+            Favorites
+        </div>
+        <button class="btn btn-lg btn-circle btn-warning">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+            </svg>
+
+        </button>
+    </div>
+</div>
+
 @* <h1>Hello, world!</h1>
 
 <div>
@@ -177,6 +250,9 @@ else
 @code {
     private string factor => FormFactor.GetFormFactor();
     private string platform => FormFactor.GetPlatform();
+
+    @* theres one in MainLayout make sure adjust this *@
+    string footerHeightClass = "pb-[60px]";
     private ElementReference calendarRef;
     private DotNetObjectReference<Home>? dotNetHelper;
     private Todo? CurrentTodo { get; set; }

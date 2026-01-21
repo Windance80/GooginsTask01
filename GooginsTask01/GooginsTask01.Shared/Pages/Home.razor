@@ -95,8 +95,13 @@ else
                             <h3 class="text-lg font-bold">
                                 @todoItem.Time.ToString("HH:mm")
                             </h3>
-                            <textarea class="textarea py-4" placeholder="Input text" @bind="newItemText"
-                    @bind:event="oninput"></textarea>
+                            <div class="flex justify-center pt-4">
+                                <textarea class="textarea grow" 
+                                    placeholder="Input text" 
+                                    @bind="newItemText"
+                                    @bind:event="oninput">
+                                </textarea>
+                            </div>
                             <div class="modal-action">
                                 <form method="dialog">
                                     <!-- if there is a button in form, it will close the modal -->

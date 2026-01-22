@@ -96,7 +96,7 @@ else
                             </h3>
                             <div class="flex justify-center pt-4">
                                 <textarea class="textarea grow" placeholder="Input text" @bind="newItemText" @bind:event="oninput">
-                                </textarea>
+                                            </textarea>
                             </div>
                             <div class="modal-action">
                                 <form method="dialog">
@@ -166,9 +166,9 @@ else
 }
 
 @* fab (floating action button) *@
-<div class="fab @footerHeightClass ">
+<div id="my-fab" class="fab @footerHeightClass " style="inset-inline-end: @(fabRightEnd)px !important;">
     <div>
-        <button class="btn btn-warning">
+        <button class="btn btn-warning" @onclick="OnAddTime">
             <div class=" text-xs ">
                 Add Time
             </div>
@@ -180,9 +180,9 @@ else
             </svg>
         </button>
     </div>
-
 </div>
-<div class="fab @footerHeightClass hidden">
+
+<div id="my-fab" class="fab @footerHeightClass hidden" style="inset-inline-end: @(fabRightEnd)px !important;">
     <!-- a focusable div with tabindex is necessary to work on all browsers. role="button" is necessary for accessibility -->
     <div tabindex="0" role="button" class="btn btn-lg btn-circle btn-warning">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -253,6 +253,9 @@ else
 
     @* theres one in MainLayout make sure adjust this *@
     string footerHeightClass = "pb-[60px]";
+    
+    @* calculate AfterFirstRender using Javascript interop *@
+    string fabRightEnd = ""; 
     private ElementReference calendarRef;
     private DotNetObjectReference<Home>? dotNetHelper;
     private Todo? CurrentTodo { get; set; }
@@ -268,7 +271,12 @@ else
 
             dotNetHelper = DotNetObjectReference.Create(this);
 
+            fabRightEnd = await JSRuntime.InvokeAsync<string>("addFabListener", dotNetHelper);
+
+            Console.WriteLine($"JSRuntime addFabeListener: widthEnd: {fabRightEnd}");
+            
             await JSRuntime.InvokeVoidAsync("addCallyChangeListener", calendarRef, dotNetHelper);
+
 
             CurrentTodo = await TodoRepository.GetTodoByDateAsync(SelectedDate);
             if (CurrentTodo != null)
@@ -357,8 +365,36 @@ else
         @* StateHasChanged(); *@
     }
 
-    async ValueTask IAsyncDisposable.DisposeAsync()
+    ValueTask IAsyncDisposable.DisposeAsync()
     {
-        dotNetHelper?.Dispose();
+        try
+        {
+            dotNetHelper?.Dispose();
+            return ValueTask.CompletedTask;
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine($"DisposeAsync: {exception.Message}");
+            return ValueTask.FromException(exception);
+        }
+    }
+
+    private async Task OnAddTime(MouseEventArgs args)
+    {
+        if (CurrentTodo is null)
+        {
+            Console.WriteLine($"OnAddTime: CurrentTodo is null");
+            return;
+        }
+
+        CurrentTodo.TodoItems.Add(
+        new TodoItem
+        {
+            Id = CurrentTodo.TodoItems.Count + 1,
+            Todo = CurrentTodo.TodoItems[0].Todo,
+            TodoId = CurrentTodo.TodoItems[0].TodoId,
+            @* Display modal to add time *@
+        }
+        );
     }
 }

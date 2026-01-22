@@ -1,6 +1,9 @@
 working on:
 * use chart.js to show in a week or month  the progress %
 * add Time Button 👈
+    * calculate fab right end after first render ✅    
+    * calculate fab right after resize event
+    * animate
 * use hammer.js to swipe left delete, use hidden trash icon, that slowly appear when swiping left
 
 done:

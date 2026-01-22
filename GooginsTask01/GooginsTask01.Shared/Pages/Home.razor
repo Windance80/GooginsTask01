@@ -69,7 +69,7 @@ else
             @foreach (var todoItem in CurrentTodo.TodoItems)
             {
                 @* time *@
-                <li class="list-row items-center" @key="@($"todoItem{todoItem.Id}")">
+                <li class="list-row items-center" >
                     <div class="text-xl sm:text-2xl text-info">
                         @todoItem.Time.ToString("HH:mm")
                     </div>
@@ -112,7 +112,7 @@ else
                 @foreach (var item in todoItem.Items)
                 {
                     @* item *@
-                    <li class="list-row items-center" @key="@($"todoitem{todoItem.Id}item{item.Id}")">
+                    <li class="list-row items-center">
                         <div class="sm:text-xl font-thin opacity-30 tabular-nums">@("-")</div>
 
                         <div class="sm:text-xl">
@@ -276,7 +276,6 @@ else
             @* Console.WriteLine($"JSRuntime addFabeListener: widthEnd: {fabRightEnd}"); *@
             
             fabRightEnd = await JSRuntime.InvokeAsync<string>("addCallyChangeListener", calendarRef, dotNetHelper);
-
 
             CurrentTodo = await TodoRepository.GetTodoByDateAsync(SelectedDate);
             if (CurrentTodo != null)

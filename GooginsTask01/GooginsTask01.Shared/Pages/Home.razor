@@ -317,12 +317,15 @@ else
         for (int i = 0; i < CurrentTodo.TodoItems.Count; i++)
         {
             if (CurrentTodo.TodoItems[i].Id == todoItem.Id)
-            {
-                var itemId = CurrentTodo.TodoItems[i].Items.Count;
+            {                
+                var items = CurrentTodo.TodoItems[i].Items;
+
+                var nextId = items.Any() ? items.Max(item => item.Id) + 1 : 1;
+
                 CurrentTodo.TodoItems[i].Items.Add(
                 new Item
                 {
-                    Id = itemId + 1,
+                    Id = nextId,
                     IsCompleted = false,
                     Text = newItemText,
                     TodoItem = CurrentTodo.TodoItems[i],

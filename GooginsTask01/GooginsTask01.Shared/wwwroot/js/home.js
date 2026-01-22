@@ -1,4 +1,4 @@
-window.addCallyChangeListener = (calendarElement, dotNetHelper) => {
+window.addHomeRazorListener = (calendarElement, dotNetHelper, dialogref) => {
     calendarElement.addEventListener('change', async (e) => {
         // console.log("javascript is running")
 
@@ -19,6 +19,25 @@ window.addCallyChangeListener = (calendarElement, dotNetHelper) => {
         // You can also call back to C# here if needed
     });
 
+    dialogref.addEventListener('click', async () => {
+        
+        const inputtedTime = document.getElementById('inputted_time');
+        // console.log("inputtedTime: " + inputtedTime.value + " end");        
+
+        const dialog = document.getElementById('my_modal_add_time');
+        if (dialog == null) {
+            console.log("dialog: " + dialog);
+            return;
+        }
+        console.log("closing dialog");
+
+        if (dotNetHelper != null) {
+            await dotNetHelper.invokeMethodAsync('HandleAddNewTimeDialog', inputtedTime.value);
+        }
+
+        dialog.close();
+    });
+
     // get the right end of window for FAB anchor
     const container = document.querySelector('#my-main-layout');
     const fab = document.querySelector('#my-fab');
@@ -37,6 +56,8 @@ window.addCallyChangeListener = (calendarElement, dotNetHelper) => {
     return right.toString();
 };
 
+
+// resizing windows, not yet implemented 
 window.addFabListener = (dotNetHelper) => {
     window.addEventListener('resize', async () => {
         const container = document.querySelector('#my-main-layout');
@@ -50,6 +71,6 @@ window.addFabListener = (dotNetHelper) => {
         // console.log('resize');
         // console.log("right: " + parseInt(right, 10));
 
-        return right.toString();        
+        return right.toString();
     });
 };

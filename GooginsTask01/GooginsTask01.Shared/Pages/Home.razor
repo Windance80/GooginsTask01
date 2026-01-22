@@ -69,7 +69,7 @@ else
             @foreach (var todoItem in CurrentTodo.TodoItems)
             {
                 @* time *@
-                <li class="list-row items-center" >
+                <li class="list-row items-center">
                     <div class="text-xl sm:text-2xl text-info">
                         @todoItem.Time.ToString("HH:mm")
                     </div>
@@ -96,7 +96,7 @@ else
                             </h3>
                             <div class="flex justify-center pt-4">
                                 <textarea class="textarea grow" placeholder="Input text" @bind="newItemText" @bind:event="oninput">
-                                            </textarea>
+                                                                    </textarea>
                             </div>
                             <div class="modal-action">
                                 <form method="dialog">
@@ -168,7 +168,7 @@ else
 @* fab (floating action button) *@
 <div id="my-fab" class="fab @footerHeightClass " style="inset-inline-end: @(fabRightEnd)px !important;">
     <div>
-        <button class="btn btn-warning" @onclick="OnAddTime">
+        <button class="btn btn-warning" onclick="document.getElementById('my_modal_add_time').showModal()">
             <div class=" text-xs ">
                 Add Time
             </div>
@@ -181,6 +181,20 @@ else
         </button>
     </div>
 </div>
+
+@* modal add time *@
+<dialog id="my_modal_add_time" class="modal">
+    <div class="modal-box w-3/4 sm:w-1/2 md:w-1/4 lg:w-1/4 mx-auto">
+        <h3 class="text-lg font-bold">Time</h3>
+        <div class="flex gap-1 pt-4">
+            <input id="inputted_time" type="time" class="input" />
+            <button class="btn btn-warning" @ref="dialogRef">Ok</button>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
 
 <div id="my-fab" class="fab @footerHeightClass hidden" style="inset-inline-end: @(fabRightEnd)px !important;">
     <!-- a focusable div with tabindex is necessary to work on all browsers. role="button" is necessary for accessibility -->
@@ -253,10 +267,11 @@ else
 
     @* theres one in MainLayout make sure adjust this *@
     string footerHeightClass = "pb-[60px]";
-    
+
     @* calculate AfterFirstRender using Javascript interop *@
-    string fabRightEnd = ""; 
+    string fabRightEnd = "";
     private ElementReference calendarRef;
+    private ElementReference dialogRef;
     private DotNetObjectReference<Home>? dotNetHelper;
     private Todo? CurrentTodo { get; set; }
     private DateTime SelectedDate { get; set; } = DateTime.Today;
@@ -271,11 +286,11 @@ else
 
             dotNetHelper = DotNetObjectReference.Create(this);
 
-             @* = await JSRuntime.InvokeAsync<string>("addFabListener", dotNetHelper); *@
+            @* = await JSRuntime.InvokeAsync<string>("addFabListener", dotNetHelper); *@
 
             @* Console.WriteLine($"JSRuntime addFabeListener: widthEnd: {fabRightEnd}"); *@
-            
-            fabRightEnd = await JSRuntime.InvokeAsync<string>("addCallyChangeListener", calendarRef, dotNetHelper);
+
+            fabRightEnd = await JSRuntime.InvokeAsync<string>("addHomeRazorListener", calendarRef, dotNetHelper, dialogRef);
 
             CurrentTodo = await TodoRepository.GetTodoByDateAsync(SelectedDate);
             if (CurrentTodo != null)
@@ -306,6 +321,36 @@ else
         StateHasChanged();
     }
 
+    [JSInvokable]
+    public async Task HandleAddNewTimeDialog(string timeOnly)
+    {
+        @* Console.WriteLine($"home.razor time: {timeOnly}"); *@
+
+        if (CurrentTodo == null || string.IsNullOrWhiteSpace(timeOnly))
+        {
+            @* Console.WriteLine($"HandleAddTimeDialog: CurrentTodo: {CurrentTodo}"); *@
+            return;
+        }
+        
+        @* get new time from dialog add time *@
+        var todoItemTime = SelectedDate.Add(TimeSpan.Parse(timeOnly));
+
+        @* get new TodoItem Id *@
+        var newTodoItemid = CurrentTodo.TodoItems.Any() ? CurrentTodo.TodoItems.Max(ti => ti.Id) + 1 : 1;
+
+        var newTodoItem = new TodoItem 
+        {
+            Id = newTodoItemid,
+            Time = todoItemTime,
+            Todo = CurrentTodo,
+            TodoId = CurrentTodo.Id
+        };
+
+        CurrentTodo.TodoItems.Add(newTodoItem);    
+        CurrentTodo.TodoItems = CurrentTodo.TodoItems.OrderBy(todoItem => todoItem.Time).ToList(); 
+        StateHasChanged();
+    }
+
     public async Task OnItemAdded(TodoItem todoItem)
     {
         @* Console.WriteLine($"TodoItem time: {todoItem.Time} newItemText: {newItemText}"); *@
@@ -317,7 +362,7 @@ else
         for (int i = 0; i < CurrentTodo.TodoItems.Count; i++)
         {
             if (CurrentTodo.TodoItems[i].Id == todoItem.Id)
-            {                
+            {
                 var items = CurrentTodo.TodoItems[i].Items;
 
                 var nextId = items.Any() ? items.Max(item => item.Id) + 1 : 1;
@@ -381,7 +426,8 @@ else
         }
     }
 
-    private async Task OnAddTime(MouseEventArgs args)
+    @*  *@
+    private async Task OnAddTime(TimeOnly newTime)
     {
         if (CurrentTodo is null)
         {
@@ -389,14 +435,19 @@ else
             return;
         }
 
+        var nextTodoItemId = CurrentTodo.TodoItems.Any() ? CurrentTodo.TodoItems.Max(ti => ti.Id) + 1 : 1;
+
         CurrentTodo.TodoItems.Add(
         new TodoItem
         {
-            Id = CurrentTodo.TodoItems.Count + 1,
+            Id = nextTodoItemId,
             Todo = CurrentTodo.TodoItems[0].Todo,
             TodoId = CurrentTodo.TodoItems[0].TodoId,
+            Items = new(),
             @* Display modal to add time *@
         }
         );
     }
+
+
 }

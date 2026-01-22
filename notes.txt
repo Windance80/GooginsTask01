@@ -1,6 +1,7 @@
 working on:
+* when add, delete,, or update, the logic must be in the implementation of interface ITodoRepository, not in the razor file👈
 * use chart.js to show in a week or month  the progress %
-* add Time Button 👈
+* add Time Button 
     * calculate fab right end after first render ✅    
     * calculate fab right after resize event
     * animate

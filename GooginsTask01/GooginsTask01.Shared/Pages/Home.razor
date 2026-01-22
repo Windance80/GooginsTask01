@@ -271,11 +271,11 @@ else
 
             dotNetHelper = DotNetObjectReference.Create(this);
 
-            fabRightEnd = await JSRuntime.InvokeAsync<string>("addFabListener", dotNetHelper);
+             @* = await JSRuntime.InvokeAsync<string>("addFabListener", dotNetHelper); *@
 
-            Console.WriteLine($"JSRuntime addFabeListener: widthEnd: {fabRightEnd}");
+            @* Console.WriteLine($"JSRuntime addFabeListener: widthEnd: {fabRightEnd}"); *@
             
-            await JSRuntime.InvokeVoidAsync("addCallyChangeListener", calendarRef, dotNetHelper);
+            fabRightEnd = await JSRuntime.InvokeAsync<string>("addCallyChangeListener", calendarRef, dotNetHelper);
 
 
             CurrentTodo = await TodoRepository.GetTodoByDateAsync(SelectedDate);

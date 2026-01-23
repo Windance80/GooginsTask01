@@ -6,6 +6,7 @@ working on:
     * calculate fab right after resize event
     * animate
 * use hammer.js to swipe left delete, use hidden trash icon, that slowly appear when swiping left
+    * no use rombo
 
 done:
 * implement chckbox ✅

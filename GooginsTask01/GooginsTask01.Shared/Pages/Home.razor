@@ -356,33 +356,19 @@ else
         @* Console.WriteLine($"TodoItem time: {todoItem.Time} newItemText: {newItemText}"); *@
         if (CurrentTodo == null)
         {
+            Console.WriteLine($"OnItemAdded: CurrentTodo is {CurrentTodo}");
             return;
         }
 
-        for (int i = 0; i < CurrentTodo.TodoItems.Count; i++)
+        if (todoItem ==  null) 
         {
-            if (CurrentTodo.TodoItems[i].Id == todoItem.Id)
-            {
-                var items = CurrentTodo.TodoItems[i].Items;
-
-                var nextId = items.Any() ? items.Max(item => item.Id) + 1 : 1;
-
-                CurrentTodo.TodoItems[i].Items.Add(
-                new Item
-                {
-                    Id = nextId,
-                    IsCompleted = false,
-                    Text = newItemText,
-                    TodoItem = CurrentTodo.TodoItems[i],
-                    TodoItemId = CurrentTodo.TodoItems[i].Id,
-                }
-                );
-                i = CurrentTodo.TodoItems.Count;
-            }
+            Console.WriteLine($"OnItemAdded: todoItem is {todoItem}");
+            return;
         }
+        
+        await TodoRepository.UpdateTodoAsync(CurrentTodo, todoItem, newItemText);
 
         newItemText = "";
-        await TodoRepository.UpdateTodoAsync(CurrentTodo);
         @* StateHasChanged(); *@
     }
 

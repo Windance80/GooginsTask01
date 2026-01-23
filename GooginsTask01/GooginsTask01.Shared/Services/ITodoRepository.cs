@@ -9,6 +9,8 @@ public interface ITodoRepository
     Task<Todo?> GetTodoByDateAsync(DateTime date);
     Task<Todo> CreateTodoAsync(Todo todo);
     Task UpdateTodoAsync(Todo todo);
+    Task UpdateTodoAsync(Todo todo, TodoItem todoItem);
+    Task UpdateTodoAsync(Todo todo, TodoItem todoItem, string text);
     Task DeleteTodoAsync(int id);       
     Task DeleteItemAsync(Item item);
 }

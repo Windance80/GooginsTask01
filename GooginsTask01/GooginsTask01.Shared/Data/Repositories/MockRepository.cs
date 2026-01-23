@@ -108,6 +108,38 @@ public class MockRepository : ITodoRepository
         return Task.CompletedTask;
     }
 
+    public Task UpdateTodoAsync(Todo todo, TodoItem todoItem)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateTodoAsync(Todo todo, TodoItem todoItem, string text)
+    {
+        for (int i = 0; i < todo.TodoItems.Count; i++)
+        {
+            if (todo.TodoItems[i].Id == todoItem.Id)
+            {
+                var items = todo.TodoItems[i].Items;
+
+                var nextId = items.Count != 0 ? items.Max(item => item.Id) + 1 : 1;
+
+                todo.TodoItems[i].Items.Add(
+                new Item
+                {
+                    Id = nextId,
+                    IsCompleted = false,
+                    Text = text,
+                    TodoItem = todo.TodoItems[i],
+                    TodoItemId = todo.TodoItems[i].Id,
+                }
+                );
+                i = todo.TodoItems.Count;
+            }
+        } 
+        UpdateTodoAsync(todo);
+        return Task.CompletedTask;
+    }
+
     private void SeedData()
     {
         var today = DateTime.Today;

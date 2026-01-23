@@ -1,6 +1,7 @@
 working on:
 * use chart.js to show in a week or month  the progress %
-* add delete button to Time 👈
+* add delete button to Time 
+    * implement it 👈
 * add Time Button 
     * calculate fab right end after first render ✅    
     * calculate fab right after resize event

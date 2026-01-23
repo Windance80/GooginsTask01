@@ -9,7 +9,7 @@
 
 <PageTitle>Home</PageTitle>
 
-@* CALENDAR *@
+@* CALENDAR - start*@
 @* <div class="@headerHeightClass  w-1/2 sm:w-1/4"> *@
 <div class="pt-5 ps-2 pe-2 w-1/2 sm:w-1/4">
     <!-- Keep original structure almost 100% the same -->
@@ -49,9 +49,103 @@
         </calendar-date>
     </div>
 </div>
+@* CALENDAR - end*@
 
 <div class="divider"></div>
 
+@* fab (floating action button) - start *@
+<div id="my-fab" class="fab @footerHeightClass " style="inset-inline-end: @(fabRightEnd)px !important;">
+    <div>
+        <button class="btn btn-warning" onclick="document.getElementById('my_modal_add_time').showModal()">
+            <div class=" text-xs ">
+                Add Time
+            </div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+        </button>
+    </div>
+</div>
+
+<div id="my-fab" class="fab @footerHeightClass hidden" style="inset-inline-end: @(fabRightEnd)px !important;">
+    <!-- a focusable div with tabindex is necessary to work on all browsers. role="button" is necessary for accessibility -->
+    <div tabindex="0" role="button" class="btn btn-lg btn-circle btn-warning">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+            class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 18.75 7.5-7.5 7.5 7.5" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 7.5-7.5 7.5 7.5" />
+        </svg>
+
+    </div>
+
+    <!-- close button should not be focusable so it can close the FAB when clicked. It's just a visual placeholder -->
+    <div class="fab-close @footerHeightClass">
+        Close <span class="btn btn-circle btn-lg btn-error">✕</span>
+    </div>
+
+    <!-- buttons that show up when FAB is open -->
+    <div>
+        <div class="text-warning text-xl font-bold bg-base-300 p-1">
+            Add Time
+        </div>
+        <button class="btn btn-lg btn-circle btn-warning">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+
+
+        </button>
+    </div>
+    <div>
+        <div class="text-warning text-xl font-bold bg-base-300 p-1">
+            Previous Todo
+        </div>
+        <button class="btn btn-lg btn-circle btn-warning">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+            </svg>
+
+        </button>
+    </div>
+    <div>
+        <div class="text-warning text-xl font-bold bg-base-300 p-1">
+            Favorites
+        </div>
+        <button class="btn btn-lg btn-circle btn-warning">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+            </svg>
+
+        </button>
+    </div>
+</div>
+
+@* modal add time *@
+<dialog id="my_modal_add_time" class="modal">
+    <div class="modal-box w-3/4 sm:w-1/2 md:w-1/4 lg:w-1/4 mx-auto">
+        <h3 class="text-lg font-bold">Time</h3>
+        <div class="flex gap-1 pt-4">
+            <input id="inputted_time" type="time" class="input" />
+            <button class="btn btn-warning" @ref="dialogRef">Ok</button>
+        </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+@* fab (floating action button) - end *@
+
+
+@* todo's *@
 @if (isCurrentTodoLoading)
 {
     <div class="flex justify-center">
@@ -178,95 +272,6 @@ else
     }
 }
 
-@* fab (floating action button) *@
-<div id="my-fab" class="fab @footerHeightClass " style="inset-inline-end: @(fabRightEnd)px !important;">
-    <div>
-        <button class="btn btn-warning" onclick="document.getElementById('my_modal_add_time').showModal()">
-            <div class=" text-xs ">
-                Add Time
-            </div>
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
-        </button>
-    </div>
-</div>
-
-@* modal add time *@
-<dialog id="my_modal_add_time" class="modal">
-    <div class="modal-box w-3/4 sm:w-1/2 md:w-1/4 lg:w-1/4 mx-auto">
-        <h3 class="text-lg font-bold">Time</h3>
-        <div class="flex gap-1 pt-4">
-            <input id="inputted_time" type="time" class="input" />
-            <button class="btn btn-warning" @ref="dialogRef">Ok</button>
-        </div>
-    </div>
-    <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-    </form>
-</dialog>
-
-<div id="my-fab" class="fab @footerHeightClass hidden" style="inset-inline-end: @(fabRightEnd)px !important;">
-    <!-- a focusable div with tabindex is necessary to work on all browsers. role="button" is necessary for accessibility -->
-    <div tabindex="0" role="button" class="btn btn-lg btn-circle btn-warning">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-            class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 18.75 7.5-7.5 7.5 7.5" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 7.5-7.5 7.5 7.5" />
-        </svg>
-
-    </div>
-
-    <!-- close button should not be focusable so it can close the FAB when clicked. It's just a visual placeholder -->
-    <div class="fab-close @footerHeightClass">
-        Close <span class="btn btn-circle btn-lg btn-error">✕</span>
-    </div>
-
-    <!-- buttons that show up when FAB is open -->
-    <div>
-        <div class="text-warning text-xl font-bold bg-base-300 p-1">
-            Add Time
-        </div>
-        <button class="btn btn-lg btn-circle btn-warning">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
-
-
-        </button>
-    </div>
-    <div>
-        <div class="text-warning text-xl font-bold bg-base-300 p-1">
-            Previous Todo
-        </div>
-        <button class="btn btn-lg btn-circle btn-warning">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-            </svg>
-
-        </button>
-    </div>
-    <div>
-        <div class="text-warning text-xl font-bold bg-base-300 p-1">
-            Favorites
-        </div>
-        <button class="btn btn-lg btn-circle btn-warning">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-            </svg>
-
-        </button>
-    </div>
-</div>
 
 @* <h1>Hello, world!</h1>
 
@@ -303,7 +308,10 @@ else
 
             @* Console.WriteLine($"JSRuntime addFabeListener: widthEnd: {fabRightEnd}"); *@
 
-            fabRightEnd = await JSRuntime.InvokeAsync<string>("addHomeRazorListener", calendarRef, dotNetHelper, dialogRef);
+            fabRightEnd = await JSRuntime.InvokeAsync<string>("resizeFAB");
+            StateHasChanged();
+            
+            await JSRuntime.InvokeAsync<string>("addHomeRazorListener", calendarRef, dotNetHelper, dialogRef);            
 
             CurrentTodo = await TodoRepository.GetTodoByDateAsync(SelectedDate);
             if (CurrentTodo != null)

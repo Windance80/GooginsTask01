@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using GooginsTask01.Services;
+using GooginsTask01.Shared.Data.Repositories;
 using GooginsTask01.Shared.Services;
 using Microsoft.Extensions.Logging;
 

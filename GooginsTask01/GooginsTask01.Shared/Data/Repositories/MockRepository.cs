@@ -1,160 +1,167 @@
 using GooginsTask01.Shared.Data.Models;
 using GooginsTask01.Shared.Services;
 
-public class MockRepository : ITodoRepository
+namespace GooginsTask01.Shared.Data.Repositories
 {
-    private readonly List<Todo> _todos = new();
-
-    public MockRepository()
+    public class MockRepository : ITodoRepository
     {
-        SeedData();
-    }
+        private readonly List<Todo> _todos = new();
 
-    // seed data
-
-    public Task<Todo> CreateTodoAsync(Todo todo)
-    {
-        todo.Id = _todos.Count + 1;
-        _todos.Add(todo);
-        return Task.FromResult(todo);
-    }
-
-    public Task DeleteItemAsync(Item item)
-    {
-        for (int i = 0; i < _todos.Count; i++)
+        public MockRepository()
         {
-            for (int j = 0; j < _todos[i].TodoItems.Count; j++)
+            SeedData();
+        }
+
+        // seed data
+
+        public Task<Todo> CreateTodoAsync(Todo todo)
+        {
+            todo.Id = _todos.Count + 1;
+            _todos.Add(todo);
+            return Task.FromResult(todo);
+        }
+
+        public Task DeleteItemAsync(Item item)
+        {
+            for (int i = 0; i < _todos.Count; i++)
             {
-                if (_todos[i].TodoItems[j].Id == item.TodoItemId)
+                for (int j = 0; j < _todos[i].TodoItems.Count; j++)
                 {
-                    for (int k = 0; k < _todos[i].TodoItems[j].Items.Count; k++)
+                    if (_todos[i].TodoItems[j].Id == item.TodoItemId)
                     {
-                        if (_todos[i].TodoItems[j].Items[k].Id == item.Id)
+                        for (int k = 0; k < _todos[i].TodoItems[j].Items.Count; k++)
                         {
-                            _todos[i].TodoItems[j].Items.RemoveAt(k);
-                            Console.WriteLine($"Item: {item.Text} deleted");
-                            return Task.CompletedTask;
+                            if (_todos[i].TodoItems[j].Items[k].Id == item.Id)
+                            {
+                                _todos[i].TodoItems[j].Items.RemoveAt(k);
+                                Console.WriteLine($"Item: {item.Text} deleted");
+                                return Task.CompletedTask;
+                            }
                         }
                     }
+
+                    // var itemTobeDelete = _todos[i].TodoItems[j].Items.Find(i => i.Id == item.Id);
+
+                    // if (itemTobeDelete != null)
+                    // {
+                    //     var isDeleted = _todos[i].TodoItems[j].Items.Remove(itemTobeDelete);
+
+                    //     if (isDeleted)
+                    //     {
+                    //         Console.WriteLine($"Item: {item.Text} deleted");
+                    //     }
+                    //     else
+                    //     {
+                    //         Console.WriteLine($"Item: {item.Text} not found");
+                    //     }
+                    // }
                 }
-
-                // var itemTobeDelete = _todos[i].TodoItems[j].Items.Find(i => i.Id == item.Id);
-
-                // if (itemTobeDelete != null)
-                // {
-                //     var isDeleted = _todos[i].TodoItems[j].Items.Remove(itemTobeDelete);
-
-                //     if (isDeleted)
-                //     {
-                //         Console.WriteLine($"Item: {item.Text} deleted");
-                //     }
-                //     else
-                //     {
-                //         Console.WriteLine($"Item: {item.Text} not found");
-                //     }
-                // }
             }
-        }
-        return Task.CompletedTask;
-    }
-
-    public Task DeleteTodoAsync(int id)
-    {
-        var isRemoved = false;
-        var todo = _todos.Find(todo => todo.Id == id);
-        if (todo != null)
-        {
-            isRemoved = _todos.Remove(todo);
+            return Task.CompletedTask;
         }
 
-        Console.WriteLine("DeleteTodo: " + id + " " + isRemoved);
-        return Task.CompletedTask;
-    }
-
-    public Task<List<Todo>> GetAllTodosAsync()
-    {
-        return Task.FromResult(_todos);
-    }
-
-    public Task<Todo?> GetTodoByDateAsync(DateTime date)
-    {
-        var todo = _todos.Find(todo => todo.Date == date);
-        return Task.FromResult(todo);
-    }
-
-    public Task<Todo?> GetTodoByIdAsync(int id)
-    {
-        var todo = _todos.Find(todo => todo.Id == id);
-
-        return Task.FromResult(todo);
-    }
-
-    public Task UpdateTodoAsync(Todo todo)
-    {
-        // remove and add todo
-        var removeTodo = _todos.Find(td => td.Id == todo.Id);
-        if (removeTodo != null)
+        public Task DeleteTodoAsync(int id)
         {
-            _todos.Remove(removeTodo);
-            Console.WriteLine($"UpdateTodoAsync: {todo.Id} removed");
-            _todos.Add(todo);
-            Console.WriteLine($"UpdateTodoAsync: {todo.Id} add");
-        }
-        else
-        {
-            Console.WriteLine($"UpdateTodoAsync: {todo.Id} not found");
-        }
-
-        return Task.CompletedTask;
-    }
-
-    public Task UpdateTodoAsync(Todo todo, TodoItem todoItem)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task UpdateTodoAsync(Todo todo, TodoItem todoItem, string text)
-    {
-        for (int i = 0; i < todo.TodoItems.Count; i++)
-        {
-            if (todo.TodoItems[i].Id == todoItem.Id)
+            var isRemoved = false;
+            var todo = _todos.Find(todo => todo.Id == id);
+            if (todo != null)
             {
-                var items = todo.TodoItems[i].Items;
-
-                var nextId = items.Count != 0 ? items.Max(item => item.Id) + 1 : 1;
-
-                todo.TodoItems[i].Items.Add(
-                new Item
-                {
-                    Id = nextId,
-                    IsCompleted = false,
-                    Text = text,
-                    TodoItem = todo.TodoItems[i],
-                    TodoItemId = todo.TodoItems[i].Id,
-                }
-                );
-                i = todo.TodoItems.Count;
+                isRemoved = _todos.Remove(todo);
             }
-        } 
-        UpdateTodoAsync(todo);
-        return Task.CompletedTask;
-    }
 
-    private void SeedData()
-    {
-        var today = DateTime.Today;
-        var yesterday = today.AddDays(-1);
-        var twoDaysAgo = today.AddDays(-2);
+            Console.WriteLine("DeleteTodo: " + id + " " + isRemoved);
+            return Task.CompletedTask;
+        }
 
-        // Today
-        var todoToday = new Todo
+        public Task DeleteTodoItemAsync(Todo todo, TodoItem todoItem)
         {
-            Id = 1,
-            Date = today,
-            LastModified = DateTime.UtcNow.AddHours(-2)
-        };
-        todoToday.TodoItems.AddRange(new[]
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Todo>> GetAllTodosAsync()
         {
+            return Task.FromResult(_todos);
+        }
+
+        public Task<Todo?> GetTodoByDateAsync(DateTime date)
+        {
+            var todo = _todos.Find(todo => todo.Date == date);
+            return Task.FromResult(todo);
+        }
+
+        public Task<Todo?> GetTodoByIdAsync(int id)
+        {
+            var todo = _todos.Find(todo => todo.Id == id);
+
+            return Task.FromResult(todo);
+        }
+
+        public Task UpdateTodoAsync(Todo todo)
+        {
+            // remove and add todo
+            var removeTodo = _todos.Find(td => td.Id == todo.Id);
+            if (removeTodo != null)
+            {
+                _todos.Remove(removeTodo);
+                Console.WriteLine($"UpdateTodoAsync: {todo.Id} removed");
+                _todos.Add(todo);
+                Console.WriteLine($"UpdateTodoAsync: {todo.Id} add");
+            }
+            else
+            {
+                Console.WriteLine($"UpdateTodoAsync: {todo.Id} not found");
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateTodoAsync(Todo todo, TodoItem todoItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateTodoAsync(Todo todo, TodoItem todoItem, string text)
+        {
+            for (int i = 0; i < todo.TodoItems.Count; i++)
+            {
+                if (todo.TodoItems[i].Id == todoItem.Id)
+                {
+                    var items = todo.TodoItems[i].Items;
+
+                    var nextId = items.Count != 0 ? items.Max(item => item.Id) + 1 : 1;
+
+                    todo.TodoItems[i].Items.Add(
+                    new Item
+                    {
+                        Id = nextId,
+                        IsCompleted = false,
+                        Text = text,
+                        TodoItem = todo.TodoItems[i],
+                        TodoItemId = todo.TodoItems[i].Id,
+                    }
+                    );
+                    i = todo.TodoItems.Count;
+                }
+            }
+            UpdateTodoAsync(todo);
+            return Task.CompletedTask;
+        }
+
+        private void SeedData()
+        {
+            var today = DateTime.Today;
+            var yesterday = today.AddDays(-1);
+            var twoDaysAgo = today.AddDays(-2);
+
+            // Today
+            var todoToday = new Todo
+            {
+                Id = 1,
+                Date = today,
+                LastModified = DateTime.UtcNow.AddHours(-2)
+            };
+            todoToday.TodoItems.AddRange(new[]
+            {
         // Original
         new TodoItem
         {
@@ -217,15 +224,15 @@ public class MockRepository : ITodoRepository
         new TodoItem { Id = 9, Time = today.AddHours(18), Items = { new Item { Id = 15, Text = "Daily wrap-up & tomorrow planning", IsCompleted = false, TodoItemId = 9, } }, TodoId = 1 }
     });
 
-        // Yesterday
-        var todoYesterday = new Todo
-        {
-            Id = 2,
-            Date = yesterday,
-            LastModified = yesterday.AddHours(18)
-        };
-        todoYesterday.TodoItems.AddRange(new[]
-        {
+            // Yesterday
+            var todoYesterday = new Todo
+            {
+                Id = 2,
+                Date = yesterday,
+                LastModified = yesterday.AddHours(18)
+            };
+            todoYesterday.TodoItems.AddRange(new[]
+            {
         // Original
         new TodoItem
         {
@@ -248,16 +255,16 @@ public class MockRepository : ITodoRepository
         new TodoItem { Id = 14, Time = yesterday.AddHours(20), Items = { new Item { Id = 20, Text = "Watch new episode", IsCompleted = true, TodoItemId = 14 } }, TodoId = 2 }
     });
 
-        // Two days ago
-        var todoOld = new Todo
-        {
-            Id = 3,
-            Date = twoDaysAgo,
-            LastModified = twoDaysAgo.AddHours(20),
-            IsDeleted = false
-        };
-        todoOld.TodoItems.AddRange(new[]
-        {
+            // Two days ago
+            var todoOld = new Todo
+            {
+                Id = 3,
+                Date = twoDaysAgo,
+                LastModified = twoDaysAgo.AddHours(20),
+                IsDeleted = false
+            };
+            todoOld.TodoItems.AddRange(new[]
+            {
         // Original
         new TodoItem
         {
@@ -280,7 +287,8 @@ public class MockRepository : ITodoRepository
         new TodoItem { Id = 19, Time = twoDaysAgo.AddHours(19), Items = { new Item { Id = 25, Text = "Backup important files", IsCompleted = true, TodoItemId = 19 } }, TodoId = 3 }
     });
 
-        _todos.AddRange(new[] { todoToday, todoYesterday, todoOld });
-    }
+            _todos.AddRange(new[] { todoToday, todoYesterday, todoOld });
+        }
 
+    }
 }

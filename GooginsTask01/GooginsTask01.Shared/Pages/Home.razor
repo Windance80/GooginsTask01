@@ -304,14 +304,7 @@ else
 
             dotNetHelper = DotNetObjectReference.Create(this);
 
-            @* = await JSRuntime.InvokeAsync<string>("addFabListener", dotNetHelper); *@
-
-            @* Console.WriteLine($"JSRuntime addFabeListener: widthEnd: {fabRightEnd}"); *@
-
-            fabRightEnd = await JSRuntime.InvokeAsync<string>("resizeFAB");
-            StateHasChanged();
-            
-            await JSRuntime.InvokeAsync<string>("addHomeRazorListener", calendarRef, dotNetHelper, dialogRef);            
+            fabRightEnd = await JSRuntime.InvokeAsync<string>("addHomeRazorListener", calendarRef, dotNetHelper, dialogRef);            
 
             CurrentTodo = await TodoRepository.GetTodoByDateAsync(SelectedDate);
             if (CurrentTodo != null)

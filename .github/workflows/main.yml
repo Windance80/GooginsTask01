@@ -1,0 +1,2 @@
+- name: Rewrite base href
+  uses: SteveSandersonMS/ghaction-rewrite-base-href@v1

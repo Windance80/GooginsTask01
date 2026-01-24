@@ -1,5 +1,5 @@
-using GooginsTask01.Shared.Data.Repositories;
 using GooginsTask01.Shared.Services;
+using GooginsTask01.Web.Client.Repositories;
 using GooginsTask01.Web.Client.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 

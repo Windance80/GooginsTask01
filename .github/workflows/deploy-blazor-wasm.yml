@@ -25,6 +25,7 @@ jobs:
         run: |
           sed -i 's|<base href="/" />|<base href="/GooginsTask01/" />|g' ./publish/wwwroot/index.html
 
+      # not sure is needed, suggest by Grok xAi
       - name: Create 404.html for SPA routing
         run: |
           cat > ./publish/wwwroot/404.html << 'EOF'

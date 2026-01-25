@@ -1,0 +1,39 @@
+name: Deploy Blazor WASM
+
+on:
+  push:
+    branches: [ master ]          # or master, depending on your default branch
+  workflow_dispatch:            # allows manual trigger from Actions tab
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Setup .NET SDK (use the version that matches your project)
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'   # ← change to 8.0.x or 6.0.x etc. if needed
+
+      # Publish ONLY the Blazor WASM project (adjust path!)
+      - name: Publish Blazor WASM project
+        run: dotnet publish GooginsTask01/BlazorWasm.csproj -c Release -o ./publish --nologo
+
+      # (Optional but recommended) Fix <base href="/"> for GitHub Pages
+      # This changes <base href="/"> → <base href="/your-repo-name/">
+      - name: Rewrite base href for GitHub Pages
+        run: |
+          sed -i 's|<base href="/" />|<base href="/${{ github.event.repository.name }}/" />|g' ./publish/wwwroot/index.html
+
+      # Deploy the published files to gh-pages branch
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./publish/wwwroot
+          # Optional: publish to root of gh-pages branch
+          destination_dir: ./

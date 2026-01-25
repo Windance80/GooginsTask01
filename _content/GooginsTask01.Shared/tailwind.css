@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "tailwindcss-motion";
 @plugin "daisyui" {
     exclude: rootscrollgutter, rootcolor;
 }

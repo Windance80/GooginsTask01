@@ -21,7 +21,7 @@ jobs:
 
       # Publish ONLY the Blazor WASM project (adjust path!)
       - name: Publish Blazor WASM project
-        run: dotnet publish BlazorWasm.csproj -c Release -o ./publish --nologo
+        run: dotnet publish BlazorWasm/BlazorWasm.csproj -c Release -o ./publish --nologo
 
       # (Optional but recommended) Fix <base href="/"> for GitHub Pages
       # This changes <base href="/"> → <base href="/your-repo-name/">

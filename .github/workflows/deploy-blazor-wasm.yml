@@ -27,8 +27,7 @@ jobs:
       # This changes <base href="/"> → <base href="/your-repo-name/">
       - name: Rewrite base href for GitHub Pages
         run: |
-          REPO_NAME="${{ github.event.repository.name }}"
-          sed -i "s|<base href=\"/\" />|<base href=\"/${REPO_NAME}/\" />|g" ./publish/wwwroot/index.html
+           sed -i 's|<base href="/" />|<base href="/GooginsTask01/BlazorWasm/" />|g' ./publish/wwwroot/index.html
 
       # Fix 2: Add 404.html that redirects back to index.html (handles SPA routing)
       - name: Create 404.html for SPA routing

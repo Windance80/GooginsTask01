@@ -27,7 +27,35 @@ jobs:
       # This changes <base href="/"> → <base href="/your-repo-name/">
       - name: Rewrite base href for GitHub Pages
         run: |
-          sed -i 's|<base href="/" />|<base href="/${{ github.event.repository.name }}/" />|g' ./publish/wwwroot/index.html
+          REPO_NAME="${{ github.event.repository.name }}"
+          sed -i "s|<base href=\"/\" />|<base href=\"/${REPO_NAME}/\" />|g" ./publish/wwwroot/index.html
+
+      # Fix 2: Add 404.html that redirects back to index.html (handles SPA routing)
+      - name: Create 404.html for SPA routing
+        run: |
+          cat > ./publish/wwwroot/404.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>Single Page Apps for GitHub Pages</title>
+              <script type="text/javascript">
+                // Redirect to the root path, preserving the original path as a hash
+                var pathSegmentsToKeep = 1; // Change to 0 if hosted at root domain
+                var l = window.location;
+                var newPath = "";
+                if (pathSegmentsToKeep > 0) {
+                  var path = l.pathname.slice(1).split('/');
+                  if (path.length > pathSegmentsToKeep) {
+                    newPath = '/' + path.slice(pathSegmentsToKeep).join('/') + l.search + l.hash;
+                  }
+                }
+                l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + newPath);
+              </script>
+            </head>
+            <body></body>
+          </html>
+          EOF
 
       # Deploy the published files to gh-pages branch
       - name: Deploy to GitHub Pages

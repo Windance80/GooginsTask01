@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "tailwind": "npx @tailwindcss/cli -i ./wwwroot/tailwind.css -o ./wwwroot/tailwind.output.css --watch"
+    "tailwind": "npx @tailwindcss/cli -i ./wwwroot/tailwind.css -o ./wwwroot/tailwind.output.css --watch --config tailwind.config.js"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.18",

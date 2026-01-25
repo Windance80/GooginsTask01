@@ -1,0 +1,6 @@
+﻿<Router AppAssembly="@typeof(GooginsTask01.Shared.Layout.MainLayout).Assembly" NotFoundPage="typeof(GooginsTask01.Shared.Pages.NotFound)">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(GooginsTask01.Shared.Layout.MainLayout)"/>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+</Router>

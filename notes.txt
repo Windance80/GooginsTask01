@@ -1,4 +1,5 @@
 working on:
+* implement resize js function in browser/wasm
 * use Sqlite 👈
 * use chart.jo show in a week or month  the progress %
 * add delete button to Time 

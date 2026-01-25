@@ -1,0 +1,5 @@
+- name: Rewrite base href
+  uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
+  with:
+    html_path: 'path/to/index.html'
+    base_href: '/GooginsTask01/'

@@ -13,11 +13,13 @@
     <ImportMap />
     <link rel="icon" type="image/png" href="_content/GooginsTask01.Shared/favicon.png" />
     @* <script type="module" src="https://unpkg.com/cally"></script> *@
-    <HeadOutlet @rendermode="InteractiveWebAssembly" />
+    @* <HeadOutlet @rendermode="InteractiveWebAssembly" /> *@
+    <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 
 <body>
-    <Routes @rendermode="InteractiveWebAssembly" />
+    @* <Routes @rendermode="InteractiveWebAssembly" /> *@
+    <Routes @rendermode="InteractiveServer" />
     @* <script src="@Assets["_content/GooginsTask01.Shared/js/datepicker.js"]""></script> *@
     <script src="@Assets["_content/GooginsTask01.Shared/js/home.js"]""></script>
     <script type="module" src="@Assets["_content/GooginsTask01.Shared/js/cally.js"]""></script>

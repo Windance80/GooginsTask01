@@ -1,14 +1,15 @@
 // using GooginsTask01.Shared.Data.Repositories;
 using GooginsTask01.Shared.Services;
-using GooginsTask01.Web.Client.Repositories;
 using GooginsTask01.Web.Components;
+using GooginsTask01.Web.Repositories;
 using GooginsTask01.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveWebAssemblyComponents();
+    .AddInteractiveServerComponents();
+    // .AddInteractiveWebAssemblyComponents();
 
 // Add device-specific services used by the GooginsTask01.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
@@ -20,7 +21,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseWebAssemblyDebugging();
+    // app.UseWebAssemblyDebugging();
 }
 else
 {
@@ -36,9 +37,10 @@ app.UseAntiforgery();
 app.MapStaticAssets();
 
 app.MapRazorComponents<App>()
-    .AddInteractiveWebAssemblyRenderMode()
+    .AddInteractiveServerRenderMode()
+    // .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(
-        typeof(GooginsTask01.Shared._Imports).Assembly,
-        typeof(GooginsTask01.Web.Client._Imports).Assembly);
+        typeof(GooginsTask01.Shared._Imports).Assembly);
+        // typeof(GooginsTask01.Web.Client._Imports).Assembly);
 
 app.Run();

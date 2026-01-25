@@ -54,7 +54,8 @@
 <div class="divider"></div>
 
 @* fab (floating action button) - start *@
-<div id="my-fab" class="fab @footerHeightClass " style="inset-inline-end: @(fabRightEnd)px !important;">
+<div id="my-fab" class="fab @footerHeightClass motion-translate-x-in-[200%] motion-duration-1000"
+    style="inset-inline-end: @(fabRightEnd)px !important;">
     <div>
         <button class="btn btn-warning" onclick="document.getElementById('my_modal_add_time').showModal()">
             <div class=" text-xs ">
@@ -156,7 +157,7 @@ else
 {
     @if (CurrentTodo != null)
     {
-        <ul class="list bg-base-100 rounded-box shadow-md">
+        <ul class="list bg-base-100 rounded-box shadow-md motion-translate-y-in-100">
 
             <li class="p-4 pb-2 text-xs opacity-60 tracking-wide sm:text-base">Tasks</li>
 
@@ -203,7 +204,7 @@ else
                             </h3>
                             <div class="flex justify-center pt-4">
                                 <textarea class="textarea grow" placeholder="Input text" @bind="newItemText" @bind:event="oninput">
-                                                                    </textarea>
+                                                                                </textarea>
                             </div>
                             <div class="modal-action">
                                 <form method="dialog">
@@ -295,7 +296,7 @@ else
     private DateTime SelectedDate { get; set; } = DateTime.Today;
     bool isCurrentTodoLoading = true;
     private string newItemText { get; set; } = string.Empty;
-
+   
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -304,7 +305,7 @@ else
 
             dotNetHelper = DotNetObjectReference.Create(this);
 
-            fabRightEnd = await JSRuntime.InvokeAsync<string>("addHomeRazorListener", calendarRef, dotNetHelper, dialogRef);            
+            fabRightEnd = await JSRuntime.InvokeAsync<string>("addHomeRazorListener", calendarRef, dotNetHelper, dialogRef);
 
             CurrentTodo = await TodoRepository.GetTodoByDateAsync(SelectedDate);
             if (CurrentTodo != null)

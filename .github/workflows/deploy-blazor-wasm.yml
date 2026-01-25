@@ -1,27 +1,8 @@
-name: Deploy Blazor WASM
+name: Deploy Blazor WASM to GitHub Pages
 
 on:
   push:
-    branches: [ master ]          # or master, depending on your default branch
-  workflow_dispatch:            # allows manual trigger from Actions tab
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout the repo
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Setup .NET SDK (use the version that matches your project)
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.x'   # ← change to 8.0.x or 6.0.x etc. if neededname: Deploy Blazor WASM to GitHub Pages
-
-on:
-  push:
-    branches: [ main ]           # change to 'master' if that's your default branch
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -34,20 +15,19 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'    # Your project targets net10.0 but 9.0.x SDK works; change to '10.0.x' if you have a 10.0 preview installed locally
+          dotnet-version: '9.0.x'   # ← Change to '9.0.x' or '6.0.x' if needed
 
+      # Force output to ./publish (repo root), not inside BlazorWasm folder
       - name: Publish Blazor WASM project
         run: dotnet publish BlazorWasm/BlazorWasm.csproj -c Release -o ./publish --nologo
 
-      # Fix base href → must be /GooginsTask01/ (case-sensitive!)
-      - name: Fix base href for GitHub Pages
+      - name: Fix base href
         run: |
-          sed -i 's|<base href="/" />|<base href="/GooginsTask01/" />|g' ./publish/index.html
+          sed -i 's|<base href="/" />|<base href="/GooginsTask01/" />|g' ./publish/wwwroot/index.html
 
-      # Add 404.html for SPA routing (refresh/direct links)
       - name: Create 404.html for SPA routing
         run: |
-          cat > ./publish/404.html << 'EOF'
+          cat > ./publish/wwwroot/404.html << 'EOF'
           <!DOCTYPE html>
           <html>
             <head>
@@ -74,52 +54,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./publish          # ← THIS WAS THE PROBLEM! Now points to the correct folder
-          destination_dir: ./             # Deploy to root of gh-pages
-          keep_files: false
-
-      # Publish ONLY the Blazor WASM project (adjust path!)
-      - name: Publish Blazor WASM project
-        run: dotnet publish BlazorWasm/BlazorWasm.csproj -c Release -o ./publish --nologo
-
-      # (Optional but recommended) Fix <base href="/"> for GitHub Pages
-      # This changes <base href="/"> → <base href="/your-repo-name/">
-      - name: Rewrite base href for GitHub Pages
-        run: |
-           sed -i 's|<base href="/" />|<base href="/GooginsTask01/" />|g' ./publish/wwwroot/index.html
-
-      # Fix 2: Add 404.html that redirects back to index.html (handles SPA routing)
-      - name: Create 404.html for SPA routing
-        run: |
-          cat > ./publish/wwwroot/404.html << 'EOF'
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <meta charset="utf-8">
-              <title>Single Page Apps for GitHub Pages</title>
-              <script type="text/javascript">
-                // Redirect to the root path, preserving the original path as a hash
-                var pathSegmentsToKeep = 1; // Change to 0 if hosted at root domain
-                var l = window.location;
-                var newPath = "";
-                if (pathSegmentsToKeep > 0) {
-                  var path = l.pathname.slice(1).split('/');
-                  if (path.length > pathSegmentsToKeep) {
-                    newPath = '/' + path.slice(pathSegmentsToKeep).join('/') + l.search + l.hash;
-                  }
-                }
-                l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + newPath);
-              </script>
-            </head>
-            <body></body>
-          </html>
-          EOF
-
-      # Deploy the published files to gh-pages branch
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./publish/wwwroot
-          # Optional: publish to root of gh-pages branch
           destination_dir: ./
+          keep_files: false

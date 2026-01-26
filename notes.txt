@@ -1,13 +1,15 @@
 working on:
-* implement resize js function in browser/wasm
-* use Sqlite 👈
+* when adding time in mobile, the button is not showing 
+    * scrool to the new added time
+* use SqliteWasmBlazor 👈
 * use chart.jo show in a week or month  the progress %
 * add delete button to Time 
     * implement it 
 * add Time Button 
     * calculate fab right end after first render ✅    
     * calculate fab right after resize event
-    * animate
+    * implement resize js function in browser/wasm  
+    * animate ✅
 * use hammer.js to swipe left delete, use hidden trash icon, that slowly appear when swiping left
     * no use rombo
 

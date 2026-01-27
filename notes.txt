@@ -1,7 +1,8 @@
 working on:
 * when adding time in mobile, the button is not showing 
     * scrool to the new added time
-* use SqliteWasmBlazor 👈
+* use SqliteWasmBlazor ❌ 
+    nope use sql-net-pcl with SQLiteNetExtensions instead
 * use chart.jo show in a week or month  the progress %
 * add delete button to Time 
     * implement it 

@@ -1,7 +1,6 @@
 <Solution>
   <Project Path="BlazorWasm/BlazorWasm.csproj" />
   <Project Path="GooginsTask01/GooginsTask01.Shared/GooginsTask01.Shared.csproj" />
-  <Project Path="GooginsTask01/GooginsTask01.Web.Client/GooginsTask01.Web.Client.csproj" />
   <Project Path="GooginsTask01/GooginsTask01.Web/GooginsTask01.Web.csproj" />
   <Project Path="GooginsTask01/GooginsTask01/GooginsTask01.csproj" />
 </Solution>
